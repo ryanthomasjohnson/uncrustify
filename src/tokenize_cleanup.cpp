@@ -154,33 +154,33 @@ void tokenize_cleanup(void)
     * this change in the first pass.
     */
    chunk_t *pc;
-   for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
-   {
-      if (chunk_is_token(pc, CT_SQUARE_OPEN))
-      {
-         next = chunk_get_next_ncnl(pc);
-         if (chunk_is_token(next, CT_SQUARE_CLOSE))
-         {
-            // Change '[' + ']' into '[]'
-            set_chunk_type(pc, CT_TSQUARE);
-            pc->str = "[]";
-            /*
-             * bug #664: The original orig_col_end of CT_SQUARE_CLOSE is
-             * stored at orig_col_end of CT_TSQUARE.
-             * pc->orig_col_end += 1;
-             */
-            pc->orig_col_end = next->orig_col_end;
-            chunk_del(next);
-         }
-      }
-      if (  chunk_is_token(pc, CT_SEMICOLON)
-         && (pc->flags & PCF_IN_PREPROC)
-         && !chunk_get_next_ncnl(pc, scope_e::PREPROC))
-      {
-         LOG_FMT(LNOTE, "%s(%d): %s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
-                 __func__, __LINE__, cpd.filename.c_str(), pc->orig_line);
-      }
-   }
+   // for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
+   // {
+   //    if (chunk_is_token(pc, CT_SQUARE_OPEN))
+   //    {
+   //       next = chunk_get_next_ncnl(pc);
+   //       if (chunk_is_token(next, CT_SQUARE_CLOSE))
+   //       {
+   //          // Change '[' + ']' into '[]'
+   //          set_chunk_type(pc, CT_TSQUARE);
+   //          pc->str = "[]";
+   //          /*
+   //           * bug #664: The original orig_col_end of CT_SQUARE_CLOSE is
+   //           * stored at orig_col_end of CT_TSQUARE.
+   //           * pc->orig_col_end += 1;
+   //           */
+   //          pc->orig_col_end = next->orig_col_end;
+   //          chunk_del(next);
+   //       }
+   //    }
+   //    if (  chunk_is_token(pc, CT_SEMICOLON)
+   //       && (pc->flags & PCF_IN_PREPROC)
+   //       && !chunk_get_next_ncnl(pc, scope_e::PREPROC))
+   //    {
+   //       LOG_FMT(LNOTE, "%s(%d): %s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
+   //               __func__, __LINE__, cpd.filename.c_str(), pc->orig_line);
+   //    }
+   // }
 
    // change := to CT_SQL_ASSIGN Issue #527
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
